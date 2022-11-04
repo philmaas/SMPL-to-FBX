@@ -5,7 +5,7 @@ from SmplObject import SmplObjects
 import os
 from scipy.spatial.transform import Rotation as R
 import numpy as np
-
+sys.path.append("C:/Program Files/Autodesk/FBX/FBX Python SDK/2020.3.2/lib/Python37_x64")
 try:
     from FbxCommon import *
     from fbx import *
@@ -40,12 +40,12 @@ class FbxReadWrite(object):
         """
         lKeyIndex = 0
         lTime = FbxTime()
-        lTime.SetGlobalTimeMode(FbxTime.eFrames60) # Set to fps=60
+        lTime.SetGlobalTimeMode(FbxTime.eFrames30) # Set to fps=60
         data = np.squeeze(data)
 
         lCurve.KeyModifyBegin()
         for i in range(data.shape[0]):
-            lTime.SetFrame(i, FbxTime.eFrames60)
+            lTime.SetFrame(i, FbxTime.eFrames30)
             lKeyIndex = lCurve.KeyAdd(lTime)[0]
             lCurve.KeySetValue(lKeyIndex, data[i])
             lCurve.KeySetInterpolation(lKeyIndex, FbxAnimCurveDef.eInterpolationCubic)
@@ -54,11 +54,11 @@ class FbxReadWrite(object):
     def addAnimation(self, pkl_filename:str, smpl_params:Dict, verbose:bool = False):
         lScene = self.lScene
 
-        # 0. Set fps to 60
+        # 0. Set fps to 30
         lGlobalSettings = lScene.GetGlobalSettings()
         if verbose==True:
             print ("Before time mode:{}".format(lGlobalSettings.GetTimeMode()))
-        lGlobalSettings.SetTimeMode(FbxTime.eFrames60)
+        lGlobalSettings.SetTimeMode(FbxTime.eFrames30)
         if verbose==True:
             print ("After time mode:{}".format(lScene.GetGlobalSettings().GetTimeMode()))
 
